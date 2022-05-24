@@ -1,0 +1,36 @@
+\chapter{Conclusions \& Further Work}
+\label{cha:future_work}
+\epigraph{
+  \hypersetup{linkcolor=bgwhite}
+This chapter rounds up this thesis and gives suggestions for future work. It briefly discusses how the developed
+ The model could be used in other aspects of machine learning, how we could improve SME to work with other high productivity languages, and how the network could be enhanced concerning computational performance.
+  
+  \hypersetup{linkcolor=linkblue}
+}
+
+
+\section{Conclusion}%
+\label{sec:conclusions}
+Throughout this project, the theory behind the FNN model implementation has been covered, starting from understanding the fundamental properties of the FPGA. Hereafter the syntax of Synchronous Message Exchange (SME) was introduced, where the theory surrounding the implementation was explained. An introduction to Feed-forward neural networks and the provided script as described. Finally, the given knowledge was then used to design the architecture of the FNN model in SME.
+The new design was then implemented in SME, and we managed to run the FNN test program successfully. The generated VHDL was then successfully run in Vivado, and it can be concluded from chapter~\ref{cha:results} that the simulated speed for the provided parameters took $66.86 ms$ compared to the python code, which took $1.41 s$ with a speedup of almost 21 times more.
+
+With this proof of concept, we have shown that with SME and no beforehand knowledge in hardware and programming, it is possible to implement code down to FPGA. This also indicates that FPGAs are good alternatives in machine learning, at least for inference.
+A more comprehensive application of the concepts on a more extensive artificial intelligence pipeline to make the full potential of faster inference would be an interesting next step.
+
+
+\section{Future Work}%
+\label{sec:future_work}
+\subsection{Specific ML package to FPGA}
+The SparNord foundation also chose this idea, and I received a scholarship to go to the University of California, Berkeley, and work on this as a start-up idea. There has been a lot of positive feedback and requests on expanding the deep learning library.
+The idea of a more straightforward work tool for implementing machine learning on a FPGA is catching companies’ interest everywhere. The demand for faster models is increasing, and the growth of PyTorch users is expanding. Therefore, extending the SME- Pytorch library could be interesting, which could optimize the algorithms and maybe get more FPGA customers and users. This is also where ONNX could be an excellent bridge for precisely this. Much time on translating a Neural Network model from one language to another would be needed with ONNX. This would speed up the development of more machine learning libraries in SME. Furthermore, one wouldn't be limited to Pytorch but would have the flexibility of every framework targeting ONNX, which also targets TensorFlow. This would target both of the two prominent Neural Networks vendors.
+
+\subsection{Performance Improvements}
+To increase the processor’s speed, there could have been more time on rewriting the different processes such that there was more focus on the clock cycles. This would allow the electrons to run over less distance and therefore fasten the speed up for each clock cycle. This would also enable the processor to work on multiple instructions in a single clock cycle, increasing the speed of the FPGA by adding more parallelism by pipe-lining the processes even more. To test the processor’s performance with a more significant workload, it would be interesting to use a more substantial amount of data parameters to get closer to a real ML problem.
+
+
+
+\subsection{ONNX and quantization}
+Another interesting approach to avoiding translating different frameworks and languages to C\# would be incorporating ONNX to save time in solving models. The focus can optimize the pipeline-lining of the SME model and accelerate the run time. Since SME does not have floating points incorporated yet, some manual translation needs to be done in VHDL; by putting each process in an IP block, quantization, in general, would be helpful. Both because it would save time to use \textbf{int} in SME but also because Pytorch speeds up the performance and could hence give an even faster run-time on the FPGA.
+
+
+

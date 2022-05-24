@@ -1,0 +1,14 @@
+\section*{Abstract}%
+\label{sec:abstract}
+This thesis presents the design of an application
+specific hardware for machine learning, which can be used in various physics applications, such as high energy physics and quantum optics.
+Even though we are better at optimizing and have more computational power than ever, there is also a continuous need to make simulations even faster, more reliable, and cheaper to run. We are explicitly investigating a FeedForward Neural Network that interprets market data and enables minimal
+round-trip times for executing electronic stock trades. There are similar trades, such as hard time restriction, which is also the case for computational physics. \\
+This thesis optimizes the network to achieve the lowest possible latency. For this purpose, we use Synchronous Message Exchange \acrshort{SME} which is suitable for describing hardware and enables the flexibility to support a wide range of applied trading protocols. This demonstrates how to construct the components of a FeedForward machine learning script down to a processor as SME processes and how to connect them by
+using SME busses. The complete system has been implemented in C\# and evaluated on an \acrshort{FPGA}. The results are promising compared to the Python implementation of the model. We present a proof
+of the concept of an initial solution and its performance provides
+results that make us believe that an entire Neural Network 
+implementation would be feasible and competitive.
+The final result is a successful implementation of a FeedForward Neural Network model on an FPGA, which runs 21 times faster than the same algorithm on a CPU.\\
+
+

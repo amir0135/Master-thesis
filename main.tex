@@ -1,0 +1,53 @@
+\documentclass[12pt, twoside, openright, a4paper]{gradient}
+\input{preamble.tex}
+\usepackage[acronym,toc,shortcuts]{glossaries}
+\makeglossaries
+
+
+\begin{document}
+
+\assignment{Master Thesis}
+\author{Amira Moussa\\ \today}
+\title{Acceleration of machine learning \\ 
+through an FPGA}
+\subtitle{A way to obtain minimal latency }
+\frontpageimage{Cover/h.png}
+\advisor{Asst. Professor Kenneth Skovhede}
+\institution{University of Copenhagen}
+\department{Niels Bohr Institute}
+
+\maketitle
+\frontmatter
+\pagestyle{ruledtitle}
+\include{Frontmatter/Acknowledgements}
+\cleardoublepage
+\include{Frontmatter/Abstract}
+\clearpage
+\include{Frontmatter/acrolist}
+\printglossary[type=\acronymtype, title= Acronyms]
+\begin{KeepFromToc}
+\hypersetup{linkcolor=black}
+\newpage\tableofcontents
+\hypersetup{linkcolor=linkblue}
+\end{KeepFromToc}
+
+\mainmatter
+\include{mainmatter/Introduction}
+\include{mainmatter/SME}
+\include{mainmatter/Neuralnetwork}
+\include{mainmatter/Implementation}
+\include{mainmatter/Results}
+\include{mainmatter/Conclusion}
+
+\appendix
+\chapter{Appendix}
+\label{app:derivations}
+\newpage
+
+\input{backmatter/SME_Sig_Guide.tex}
+
+\printbibliography[title={\color{black} Bibliography}]
+
+
+
+\end{document}

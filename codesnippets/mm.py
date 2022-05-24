@@ -1,0 +1,1 @@
+h = x.mm(self.W0.reshape(self.num_networks * self.hidden_size, self.input_size).t())

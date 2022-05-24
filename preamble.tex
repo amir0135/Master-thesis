@@ -1,0 +1,117 @@
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{acronym} 
+\usepackage[english]{babel}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage[colorlinks]{hyperref}
+\usetikzlibrary{patterns}
+
+% custom commands
+\newcommand{\matr}[1]{\boldsymbol{\textbf{#1}}}
+\newcommand{\wmatr}[1]{\matr{W}^{\text{#1}}}
+\newcommand{\dd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\vect}[2]{ \begin{pmatrix} #1 \\ #2 \end{pmatrix} }
+\newcommand{\XT}{\matr{X}^{\text{T}}}
+\newcommand{\XbI}{\vect{\matr{X}}{\beta \matr{I}}}
+%\renewcommand{\vec}{\textbf}
+\newcommand{\vt}[1]{\vec{#1}_t}
+\DeclareUnicodeCharacter{2212}{\textendash}
+\newcommand{\texthash}{\# }
+
+% bibliography
+\usepackage[backend=biber, citestyle=authoryear, bibencoding=utf-8]{biblatex}
+\addbibresource{backmatter/bib.bib}
+
+
+
+
+\graphicspath{{figures/}}
+
+%% Til at tegne træer!
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows,calc}
+\tikzset{
+    on grid,
+    node distance=3cm,
+    auto,
+    block/.style = {
+        draw,
+        shape=rectangle,
+        minimum height=3em,
+        minimum width=3em,
+        line width=1pt
+    },
+    control/.style = {
+        draw,
+        shape=circle,
+        minimum height=7em,
+        minimum width=3em,
+        line width=1pt
+    },
+    mux/.style = {
+        draw,
+        shape=rectangle,
+        minimum height=1.5em,
+        minimum width=1em,
+        line width=1pt
+    },
+    empty/.style = {
+        shape=rectangle,
+        minimum height=3em,
+        minimum width=3em
+    },
+    >=latex',
+}
+
+
+% code listings
+\usepackage[scaled=0.6]{beramono}
+\usepackage{minted}
+\usemintedstyle{friendly}
+\definecolor{bggrey}{rgb}{0.90, 0.90, 0.90}
+\definecolor{bgwhite}{rgb}{1,1,1}
+\setminted{bgcolor=bggrey, fontsize=\footnotesize, linenos, breaklines,obeytabs=true,tabsize=2,breaksymbolleft=}
+
+
+% nice inline code
+\makeatletter
+\newcommand{\currentfontsize}{\fontsize{\f@size}{\f@baselineskip}\selectfont}
+\makeatother
+\setmintedinline{fontsize=\currentfontsize, bgcolor=bgwhite}
+\newcommand{\ttt}[1]{\texttt{#1}}
+
+\usepackage{listings}
+\lstset{showspaces=false,
+    showtabs=false,
+    breaklines=true,
+    showstringspaces=false,
+    breakatwhitespace=true,
+    escapeinside={(@}{@)},
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+    %commentstyle=\color{greencomments},
+    % keywordstyle=\color{bluekeywords}\bfseries,
+    % stringstyle=\color{redstrings},
+    basicstyle=\footnotesize \ttfamily,
+    %numbers= false,
+    frame=tb
+}
+
+
+% links in document
+\usepackage{hyperref}
+\renewcommand\UrlFont{\ttfamily\itshape}
+\definecolor{linkblue}{rgb}{0.3, 0.3, 0.3}
+\hypersetup{
+  colorlinks=true,
+  linkbordercolor=linkblue,
+  pdfborderstyle={/S/U/W 1},
+  linkcolor=linkblue,
+  urlcolor=linkblue,
+  allcolors=linkblue,
+}
+
+% show subsections in table
+\setcounter{tocdepth}{2}
+
+

@@ -1,0 +1,109 @@
+\chapter{Introduction}
+\label{cha:introduction}
+\epigraph{
+  \hypersetup{linkcolor=bgwhite}
+  This thesis will investigate machine learning methods and examine or propose techniques for implementing them effectively in hardware. To validate and drive the design decisions, we will use a sample of applications from High-Frequency Trading \acrshort{HFT}, which has strict latency requirements. To avoid complexities in an already complicated implementation problem, we use a simple real-world feed-forward network for stock-price prediction obtained from an industry collaboration with a company wishing to remain anonymous and thus will not be mentioned.
+  
+  
+ \iffalse
+ Currently, the most commonly used hardware is the \acrshort{CPU}/\acrshort{GPU} because of their ease of use with high-level languages. However, by utilizing a Field-programmable gate array \acrshort{FPGA}, we could optimize time and energy since they possess the advantages of customized parallelism and design. The resulting plan will give us greater insight into reducing the latency of machine learning algorithms when implemented on an FPGA. This has implications for several real-world applications, including on-sensor evaluation of data in high bandwidth experiments, such as neutron accelerators and free-electron lasers. To validate and drive the design decisions, we will use a sample of applications from High-Frequency Trading, which has strict latency requirements.
+ \fi
+ 
+FPGAs are used in various physics applications, such as high energy physics and quantum optics, because of their versatility, programmability, high bandwidth communication
+interfaces and signal processing capabilities.
+
+Due to the complexity of programming, their use has been limited to somewhat simple applications.
+However, many experiments could benefit from having a machine learning model on the FPGA. This is currently done in top-tier facilities, such as CERN.
+This thesis explores the implementation of machine learning models on FPGAs using SME to accelerate inference. 
+ 
+  %these characteristics and about the significant benefits that high-frequency traders get from the integration of FPGA hardware into their digital systems.
+  
+
+This chapter introduces the motivation behind optimizing HFT  alongside descriptions of commonly used processor architectures. Because the FPGA chips are not instruction-based hardware and have to be built upon hardware level, there is a need for a tool to translate the algorithms down to the hardware. In this case, we will use Synchronous Message Exchange (SME) which will be introduced in Chapter~\ref{cha:SME}. We want to implement a \acrshort{FNN} used in high-frequency trading to see if we can optimize the speed and efficiency of this model. The FNN model will be introduced in Chapter~\ref{cha:Neural Network}. The implementation of the FNN from Python to SME and then down to the FPGA will be described in \ref{cha:implementation}.
+  Lastly, in Chapter~\ref{cha:results} the testing of the implementation and results will be discussed.
+ 
+  \hypersetup{linkcolor=linkblue}
+}
+
+
+
+%\section{Background}
+\section{High Frequency Trading}
+\textbf{High-Frequency Trading} \acrshort{HFT} is an automated trading platform that large investment banks, hedge funds, and institutional investors use to automate trading. It consists of algorithms that run through powerful computers to transact many orders at extremely high speeds.
+Over the last couple of millenniums, new technologies have constantly been developed, and with the evolution of computers, financial markets also evolved. Manual labor is increasingly being automated through the use of algorithmic trading strategies [\cite{gianluca2017high}].
+One example of strategic algorithm trading is liquidity-providing strategies, where high-frequency traders try to earn
+the bid-ask spread, which represents the difference of what
+buyers are willing to pay, and sellers are willing to accept for
+trading stock. "High volatility and large bid-ask spreads can be
+turned into profits for the high-frequency trader while in return
+he provides liquidity to the market and lowers the bid-ask
+spread for other participants, adopting the role of a market
+maker" [\cite{leber2011high}].
+
+These types of problems are studied in deep learning programming. Moreover, these algorithms can work at multiple time scales, but the most interesting one is high-frequency trades that execute in milliseconds or less. At this time scale, machines are needed because of their speed and can process more information efficiently.
+
+\section{Motivation}
+\label{sec:motivation}
+The stock market is moving towards \acrshort{HFT} and micro-optimization, which has received a lot of attention during the past couple of years [\cite{agarwal2012high}], turning it into an increasingly important component of financial markets. 
+
+The demand for storing big data and running algorithms faster has reached its limit with the commonly used hardware, mainly the \acrshort{CPU} and \acrshort{GPU}. Companies interested in optimizing their trading have grown an interest for the \acrshort{FPGA}. These have specific technical characteristics that enable them to execute certain trading algorithms much faster than traditional software solutions. 
+
+HFT algorithms compete on two dimensions: Firstly, they receive large amounts of stock market pricing data every microsecond.
+Secondly, they must be able to act extremely fast on the received data, as the profitability of the signals they observe results in latency.
+
+The first point is crucial. High-frequency trading is all about speed and minimizing latency. The faster you can run trading strategies and algorithms for analyzing minute price changes and executing trade orders, the higher the probability of gaining the most profit. 
+Secondly, keeping a large amount of data in memory will slow down the hardware. Therefore, algorithms must use only a minimal amount of data and parameters stored in fast access memory. \\
+Artificial neural networks have become a necessary tool in almost any area handling data and help predict future ranges from \ac{Fintech} to physics because of their abilities to predict different outcomes from complex relationships between data. Nevertheless, due to extensive incoming data and the need for faster inference, looking into other alternatives to implementing algorithms has grown. The FPGA has shown significant improvement in both power consumption and performance on some specific tasks when compared to the GPU and could therefore be a potential candidate as an alternative to the other hardware [\cite{FPGA}]. However, the FPGA is not ideal for replacing all processors because of its customization cost. Nonetheless, due to its parallelism, it could help optimize the latency of memory sharing, which would mean a lot in the \acrshort{HFT} field. The latency of memory sharing is vital as the algorithms developed by trading firms are competing on the scale of nanoseconds. To investigate these trade-offs, this thesis will explore how implementing a Feedforward network on an FPGA could potentially enhance the performance and whether it is worth replacing parts of the traditional hardware solutions with an FPGA.
+
+
+\iffalse
+Artificial neural networks have especially gotten popular in the financial-technology (fin-tech) area to handle data and help predict future changes in the stock market. But due to massive incoming data and fast transactions, the interest in looking into other alternatives on implementing their algorithms has grown. However, the FPGA is not ideal for replacing all processors, but it could help optimize the latency of memory sharing due to its parallelism. In this thesis, we will implement a Feedforward network on an FPGA and look at the performance to see if it is worth replacing hardware parts.
+\fi
+
+
+
+
+
+
+
+\section{The different hardware}
+%machine learning algorithms are being used more in the fin-tech to extract and process information from raw data. 
+Due to the increasing popularity of using ML in fin-tech, there has been a race to use the fastest hardware to achieve rapid predictions and trading  [\cite{FPGAvsGPU}].
+Thus, there is a growing demand for hardware platforms to compute such intensive machine learning algorithms. As deep learning has driven most advanced machine learning applications, it is regarded as the main comparison point.
+Nowadays, there are several types of processors, although when discussing heavy calculations, the main ones are the Central Processing Units (CPU), Graphics Processing Unit (GPU), Application Specific Integrated Circuit(ASIC), and Field Programmable Gate Array (FPGA). 
+
+To understand the main applications and differences underlying each processor, the following section will present a brief overview of the different hardware and how they compare.
+
+\subsection{Central Processing Unit}
+\acrshort{CPU} is a chip that executes a program based on a specified set of instructions in a sequential manner. These are optimal for single-process systems, where the code needs to be executed sequentially or linearly.
+The internal hardware structure is defined by the CPU vendor and cannot be modified [\cite{5272532}]. As a result, CPUs are general purpose and can thus perform any function based on the software program that is uploaded onto them.\\
+
+\subsection{Graphic Processing Unit}
+\acrshort{GPU} is a chip that performs fast mathematical calculations, primarily for graphics. In the 1980s, they were only used to offload pictures from the CPU [\cite{GPUvsfpga}]. As we progressed, drawings became more advanced, triggering a concurrent evolution of advanced GPUs. An image is composed of thousands of pixels processed by hundreds to thousands of identical cores that are specifically designed to execute the same program in a parallel manner. Because of their highly efficient parallel functioning, GPUs are now used in a variety of different fields and applications such as vector and matrix mathematics, for which they render jobs faster than the CPU [\cite{GPUvsfpga}]. The benefit is that instruction-based hardware can be bought as a finished product. This means that you can write instructions for them in different high-level languages, making it much easier for software engineers to work with. 
+
+\subsection{Application-Specific Integrated Circuit}
+
+Application-Specific Integrated Circuit \acrshort{ASIC} are single-purpose chips, meaning that they can only execute commands for which they have been specifically designed. 
+Hence, they cannot perform another function or execute different applications once programming is complete [\cite{asic}]. The logic function of ASIC uses hardware description languages such as Verilog or VHDL.
+However, CPU, GPU, and FPGAs are all types of ASIC, their applications being a general-purpose central unit, graphics-oriented, or field programmable, respectively.
+
+Since these chips are built for a singular purpose, they do not have to run through unnecessary circuits to run a function, allowing the power consumption of ASICs to be very minutely controlled and optimized. As a result, they are often more power-efficient compared to other alternatives.
+
+
+
+\subsection{Field Programmable Gate Array}
+\acrshort{FPGA}, is a chip optimized for being re-configurable hardware, as in the user 'programs' the hardware circuit. 
+A bare FPGA consists of small chunks of configurable logic blocks \acrshort{CLB} which can be configured to perform different functions. It consists of various components such as transistor pairs, look-up tables (LUTs), flip flops (registers), and multiplexers.
+The blocks are connected with electronic wiring that can be turned on and off [\cite{asic}]. The logic blocks can be thought of as separate modules which can operate in parallel. These can be controlled, and it is possible to hook these together by programming the interconnects to build something meaningful.
+An FPGA can be reconfigured by programming the logic blocks and manipulating the internal state. This can also be done even after deployment, which makes them ideal for systems and devices that need frequent updates such as prototypes, networking products, and other electronic systems [\cite{FPGA}]. Writing instructions to the FPGA can mainly be done in low-level languages such as \acrshort{VHDL} or \acrshort{Verilog}. \\
+
+
+\subsection{Comparison}
+The FPGA has a different architecture from the GPU and CPU, although in some cases, it is possible to apply either one for similar tasks. FPGAs tend to have more flexible architectures as compared to GPUs and CPUs. The main difference is that the CPU/GPU is instruction-based hardware, which means one can access the hardware using higher-level language. In contrast, the FPGA needs to be accessed from lower-level languages such as VHDL or Verilog.
+This difference can make FPGA more responsive and allows more dedicated special-purpose implementation desired by the developer, described in [\cite{FPGA_CPU}].
+CPUs/GPUs, comparatively, are easier to use for software engineers than FPGAs as the development process for the latter tends to be much more knowledge extensive and complicated than for the former, which explains why modern GPUs are being applied across a multitude of fields [\cite{GPUvsfpga}]. 
+
+One of the prime features and advantages of FPGAs is that the entire internal hardware can be reprogrammed and reconfigured as the user is permitted to determine the logic of each block in the system. Hence, they are much more flexible in their programming and customized according to the programmer’s needs. 
+
+FPGA is compared to ASIC reconfigurable, whereas the latter is permanent. The FPGA has a more straightforward design flow due to the flexibility of the chip, whereas the ASICs entail more complex design flows, given their reliance on a permanent architecture. The ASIC design requires dedicated and more expensive tools. The FPGA is a low-power-consuming chip compared to the CPU/GPU. It is more power-intensive in comparison to ASIC, which is a known established solution for battery-operated products.
+The following Chapter will introduce the software to deploy code on the FPGA.

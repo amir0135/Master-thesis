@@ -1,0 +1,194 @@
+\chapter{Results}
+\label{cha:results}
+\epigraph{
+  \hypersetup{linkcolor=bgwhite}
+
+
+The thesis results will be presented in this chapter, touching upon two key areas. 
+%First, the \texttt{simulation} process and data testing will be explained to give an understanding of how to test the model. Second, 
+The proposed methodology from the previous chapters will be adopted and tested on the data of the focal company. Conducting this experiment will provide further insight into the speed and performance of the FPGA and how it performs in a real-life setting. 
+ 
+
+ 
+  \hypersetup{linkcolor=linkblue}
+}
+
+
+
+
+
+
+\section{Results}
+
+\begin{table}
+\centering
+\begin{tabular}{||c|c |c| c| c| c |c||} 
+ \hline
+ \textbf{Id} & \textbf{Data} & \textbf{input size} & \textbf{hid size} & \textbf{\# networks} & \textbf{max predict} & \textbf{Batch size}\\ [0.5ex] 
+ \hline\hline
+1 & Test size & 4 & 7 & 5 & 1 & 1 \\ 
+2 & Actual sizes & 256 & 96 & 16 & 1 & 1 \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{\textit{Parameters with different sizes used to test the FNN model in SME}}
+\label{table:data_size}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{||c c c c c c||} 
+ \hline
+Name & Clock rate [MHz] & Logic & Registers & Block RAM  & DSP \\ [0.5ex] 
+ \hline\hline
+clamp & 191.4975 & 197 & 419 & 0 & 0\\
+hzhr & 74.6436 & 711 & 1089 & 1.5 & 10\\
+load\_data & 596.3000 & 993 & 2367 & 9.5 & 56\\
+matmul & 51.2242 & 596 & 1292 & 9.5 & 9\\
+mean & 17.7135 & 1162 & 1372 & 0 & 3\\
+mulmin & 51.6022 & 417 & 1037 & 0 & 4\\
+rz & 90.6536 & 273 & 526 & 0 & 4\\
+sigmoid & 17.7135 & 1933 & 1267 & 0 & 3\\
+softplus & 31.1536 & 1188 & 1037 & 0 & 3\\
+sumlast & 45.7603 & 846 & 2317 & 1 & 6\\
+transpose & 884.9557 & 249 & 403 & 16 & 2\\
+z\_r & 77.9301 & 545 & 1041 & 3 & 10\\
+zz & 90.6536 & 273 & 526 & 0 & 4\\
+FeedForward & 17.7135 & 9121 & 8468 & 20.5 & 110\\
+ \hline
+\end{tabular}
+\caption{
+\textit{Small parameter set}. Timing and utilization post Synthesis as reported by Vivado targeting a ZedBoard.}
+\label{table:utilization_small}
+\end{table}
+
+
+
+\begin{table}
+\centering
+\begin{tabular}{||c c c c c c c||} 
+ \hline
+name & Clock rate (MHz) & Logic & Registers & LutRAM &  Block RAM & DSP  \\ [0.5ex] 
+ \hline\hline
+clamp & 184.6722 & 215 & 418 & 48 & 0 & 0\\
+hzhr & 74.0686 & 657 & 1117 & 48 & 6 & 10\\
+load\_data & 47.6077 & 4198 & 2458 & 2360 & 384 & 56\\
+matmul & 51.2243 & 3673 & 1991 & 2288 & 384 & 11\\
+mean & 17.7135 & 1162 & 1372 & 24 & 0 & 3\\
+mulmin & 51.6022 & 433 & 1036 & 48 & 0 & 4\\
+rz & 86.9490 & 259 & 525 & 72 & 0 & 4\\
+sigmoid & 17.7135 & 1949 & 1266 & 48 & 0 & 3\\
+softplus & 31.1536 & 1204 & 1036 & 48 & 0 & 3\\
+sumlast & 45.7603 & 852 & 2329 & 48 & 4 & 6\\
+transpose & 61.0500 & 785 & 1427 & 0 & 768 & 6\\
+z\_r & 74.0686 & 505 & 1081 & 0 & 12 & 10\\
+zz & 86.9490 & 259 & 525 & 72 & 0 & 4\\
+FeedForward & 17.71 & 17515 & 10695 & 7223 & 768 & 117\\
+ \hline
+\end{tabular}
+\caption{
+\textit{Large parameter set}. Timing and utilization post synthesis as reported by Vivado targeting a ZedBoard.}
+\label{table:utilization_acutal}
+\end{table}
+
+To test the processes quickly, a small data set of the different weights were randomly generated and used throughout the construction of the SME model. Since we are not interested in the FNN predictions, but if the FNN model SME aligns with the results, using these random values will be sufficient. The first parameter set is among other small test data to check if all values matched and test that all stages work by keeping track of the results. The implementation started without the automated setup of matching the predicted output with the calculated. Parameter set 2 are the actual parameter sizes for the network used by the high-frequency trading firm. If all executions provide a True, the expected output matches the SME output. The SME model was tested with two different parameters and input sets, and we made sure to get a match of the C\# and SME results throughout the simulation. This is a deterministic problem since this can be tested for several parameter sizes. However, changing the dimensions would cause a change of the index addresses since we are working with a flat array.  \\ 
+
+Having the simulation work and matching, the next step would be to generate \acrshort{VHDL}. In \textbf{program.cs} at the end of the code, we can generate VHDL code. As mentioned in chapter \ref{cha:SME}, SME can be transpiled into VHDL and, as such, provides a high-level approach for hardware design. This will be processed in Vivado [\cite{ref:vivado}]. 
+Vivado is a tool for synthesizing and implementing hardware designs for Xilinx FPGAs. Vivado supports the VHDL language.
+This simulation done in VHDL is the closest to the actual hardware, as it visualizes all of the different wires, timing, and components used in the FPGA. \\
+
+In this thesis, the target board was a ZedBoard [\cite{Zedboard}].
+A ZedBoard is a development board containing a Xilinx Zynq system-on-chip. A Zynq chip consists of a processing system and a programmable logic [\cite{zynq}]. The behavioral simulation should be run once the project has been created in Vivado, the behavioral simulation
+should be run. Since there was not enough time to work with the FPGA itself, the implementation collaborated with Carl-Johannes Johnsen. Therefore, we will not further detail the FPGA but rather analyze the provided results.
+These numbers are post-synthesis, which means that they are estimates. I.e., given a "perfect" FPGA, we would be able to reach those clock rates and those resource utilizations. After running place and route, we assume that the clock rate will be lower, making it slower. However, utilization should improve, as Vivado can optimize post place and post route. The reason for not doing place and route is the BRAM utilization. If any resource is over $100\%$, it cannot be done.
+
+The most relevant metrics in the given report are Logic, LUTRAM, Registers, Block RAM, and DSPs, which can be found in \ref{table:usage_percent}.
+\acrshort{BRAM} are memory blocks, which contain more memory than the registers
+The timing and utilization numbers gathered from the different parameters can be seen in Table \ref{table:utilization_small} and \label{table:utilization_acutal}. We achieved a clock cycle rate with the lowest bound of $17.714$ MHz. FPGA resources, i.e., the number of Logic used in the implementation for the whole model was 9121 and 17515, respectively, for the parameter set $1$ and $2$. This gives a percentage of $17.14\%$ and $32.92\%$ of the available logic on the ZedBoard. The ratio between how much board uses and the two-parameter sets seem pretty different in size. If we had more time, it would have been interesting to investigate how each of the parameters in Table~\ref{table:data_size} affects the resources used. \\
+
+The number of clock cycles determines how long it takes to run the entire data set. The clock rate is measured in \textit{Mhz}, which is how many clock cycles it can run per second. To have a better understanding of the performance of each process on the FPGA, one can look into the different components seen in Table~\ref{table:utilization_small} and \ref{table:utilization_acutal}. This shows how many resources are available on the tiny board.
+
+\begin{table}
+\centering
+\begin{tabular}{||c c c c c c||} 
+ \hline
+ \textbf{Resource} &\textbf{ Utilization 1} & \textbf{Utilization 2} & \textbf{Available} & \textbf{Utilize 1 } & \textbf{Utilize 2} \\ [0.5ex] 
+ \hline\hline
+ Logic & 9121 & 17515 & 53200 & 17.14\% & 32.92\% \\ 
+ LUTRAM & 327 & 7223 & 17400 & 1.88\% & 61.47\%\\
+ Registers & 8468 & 10695 & 106400 & 7.96\% & 6.79\% \\
+BRAM & 20.50 & 768 & 140 & 14.64\% & 548.57\% \\
+DSP & 110 & 117 & 220 & 50.00\% & 53.18\% \\
+ \hline
+\end{tabular}
+\caption\textbf{Table representing the resource utilization for the whole FNN model on a small FPGA}
+\label{table:usage_percent}
+\end{table}
+
+
+From Table \ref{table:usage_percent}, there are room for data-set 1. For data set two, most of the resources use less space than available but not in \textit{BRAM} when it comes to data set 2. In Table \ref{table:utilization_small} and \ref{table:utilization_acutal} both \textit{LUTRAM} and the \textit{BRAM} is mostly used for the \texttt{Transpose} and \texttt{FeedForward} processes. Since the \texttt{Transpose} takes in all the data as an input and outputs all the data transposed, this takes a lot of space in the memory. It is half the size for the \texttt{Load\_data} and \texttt{Matmul} because all the data only goes in one way. When connecting all modules, the input from one stage is the output from the previous.
+
+In general, it takes longer to execute with the more extensive input data $x$, making the network larger. Since you can divide by x, in the end, to get clock cycles per prediction, and hence time per prediction, it should not affect the resulting network.
+In addition, a more considerable input $x$ should not have an effect if it is set up correctly. The problem right now is that it runs the whole $x$ through, which means that it must accommodate the entire $x$ and the whole transposed $x$, which takes up quite a lot of memory. If we ran the batch sizes right, it would be possible to only have room for a single batch. To fix the need for space in \acrshort{BRAM}, one can either exchange the board with a larger version to be able to run all the data through or make smaller batches of the data, so it stores less inside the board itself while executing. \\
+One could bulletproof test the model by trying this on several dimensions or similar models, but time restrictions did not become a reality.
+
+\begin{table}
+\centering
+\begin{tabular}{c c c c } 
+ \hline
+& $t_{Python}$ & $t_{SME}$ & $\Delta t$\\
+Test size & 0.86 s & $0.034 \mu s$ & 25294.12 \\ 
+Actual size & 1.41 s & 66.86 ms & 21.09 \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Running time for the whole FNN model executed with Python on a CPU and Vivado on a ZedBoard. $t_{Python}$ was measured using the \texttt{time} module in python, $t_{SME}$ denotes the time from the simulation in Vivado and $\Delta t$ denotes the scaling factor}
+\label{table:compare}
+\end{table}
+
+It is also possible to compute an estimate of the execution time. This can be done by counting the number of clock cycles used by SME during the simulation and multiplying them with the time needed for a single clock cycle. At $17.71 MHz$, one clock cycle takes $56.45 ns $ to run.
+This is the lowest bound for the clock rates and means this takes the longest. In both tables for the processes, the \texttt{mean}, \texttt{sigmoid} and \texttt{FeedForward} function takes the longest. This is probably because of the use of division. One of the hardest operations in the FPGA is using division. This could probably be optimized if the process was pipe-lined even more. The steps in calculating the mean were split into more processes running simultaneously. Using the reciprocal instead of division could be an option to spread the difference on the ZedBoard. One could also be splitting the data into batches again such that the mean evaluates fewer data at a time. Another way to increase the running time would be using quantization on the input predictions.\\
+
+For parameter set 1, an input data set of 4000, prediction takes $597$ clock cycles. If we use these numbers, we can compute an estimate of the execution time. We do this by counting the number of clock cycles used by SME during the simulation and multiplying them with the time needed for a single clock cycle. Thus,
+$597$ times $56.45 ns $, gives a running time of $0.034 \mu s$ in total for the parameter set 1.
+For parameter set 2, to run the whole FNN, having 256,000 predictions takes 1,184,385 clock cycles in total, which will take $1184385$ times $56.45 ns $ giving a running time of $66.86 ms$ in total.
+If we divide the running times with the predictions, we get how long it takes to run a single prediction which is $261.1847 ns/pred$.
+We can find the final running times for the SME and Python implementation of the whole FNN, where the comparison is shown in Table \ref{table:compare}. The Python code was executed on an Apple Macbook Pro carrying an M1 chip. For more information about the machine, see Table~\ref{table:machine}. We see that the SME implementation performs better than the Python implementation for all cases. The scale is so immense for the test size because python has a "heavy" startup time. I.e., it's pretty fast if discarding the warm-up time.
+However, this should be taken lightly. The Python implementation runs directly from the computer and is not set to utilize the entire processor, which can be done. 
+We managed to design and implement the FNN model in SME and successfully generated a VHDL code which was then successfully run through Vivado. The results show that we have accelerated the FNN model in general, and with optimization almost 21 times faster, this seems like an excellent update for the high-frequency trading company. However, the inference could be optimized quite a lot. There could have been more time on rewriting the different processes such that there was more focus on the clock cycles by using more pipe-lining on the parts that use too much memory. 
+
+
+
+\begin{table}
+\centering
+\begin{tabular}{c c } 
+ \hline
+CPU & 8-core CPU 3.2 GHz\\ 
+ARM & ARMv8.4-A \\
+Xillix Vivado & 2020.2 \\ 
+Python & version 2.7.16 \\ 
+Pytorch & version 1.8.0 \\
+FPGA board & Zedboard \\
+FPGA Chip & Xillix Zynq Z020 \\ [1ex] 
+ \hline
+\end{tabular}
+\caption\textbf{Specifications of the Apple Macbook Pro carrying an M1 chip, running the FNN model. This is along with the version numbers of the programs used.}
+\label{table:machine}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

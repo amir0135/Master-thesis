@@ -1,0 +1,131 @@
+\section{SME example of a sigmoid function}
+\label{appendix:Sme_guide}
+A guide explaining every step is given to show how SME works, so a person with almost no coding experience can try it out. We will implement a simple function that is already made in $C\texthash$. It takes a value in as an input and spits a result out.
+We will implement the sigmoid function, which is described in Sec.~\ref{fig:sigmoid}.
+Before you can run this example, make sure you have installed:
+\begin{itemize}
+\item .Net Core SDK with at least version 2.0
+\item VS Code (or another editor) and the C\texthash extensions \\
+\end{itemize}
+as they work well on all operating systems:
+
+
+
+For this quick example, we are going to start a project in a folder we create called \textbf{SIGMOID},
+which is where all shown files are going to be placed. 
+To do this, we are going to open up a terminal window and navigate to the desired folder destination, which could be the Desktop as an example, and invoke the command \\
+
+\begin{lstlisting}{}
+$ cd Desktop
+$ dotnet new console -n SIGMOID
+\end{lstlisting}
+
+Next, we go into the folder by 
+\begin{lstlisting}
+$ cd SIGMOID
+\end{lstlisting} 
+
+and add the necessary SME libraries
+\begin{lstlisting}
+$ dotnet add package SME -- version =0.4.0 - beta
+$ dotnet add package SME . GraphViz -- version =0.4.0 - beta
+$ dotnet add package SME . Tracer -- version =0.4.0 - beta
+$ dotnet add package SME . VHDL -- version =0.4.0 - beta
+\end{lstlisting} 
+
+
+There should now exist three items inside the SIGMOID folder: Program.cs, SIGMOID.csproj
+, and a folder called obj. If all goes well, we should now be able, to begin with, our project.\\ 
+
+Since all functions have to be built through busses and processes, complicated systems can quickly end. The best way to get an overview is to make a drawing over your system. Even though this system is simple, we will still draw to understand how it works.\\
+
+\begin{figure}
+  \centering
+    \begin{tikzpicture}[node distance=6cm,] 
+        
+        \node[block, text width=3cm, align=center] (A) {SigSimulator};
+        \node[block, right of=sme, text width=2cm, align=center] (B) {Sigmoid};
+
+        %connect
+        \path[draw, ->] (A) -- (B) node[midway,above midway]{ValueTransfer};
+        %\path[draw, ->] (B.90) -- (A.90) node[midway,above midway];
+%LAV DET ORDENTLIGT
+
+
+    \end{tikzpicture}
+    \caption{The rectangles represent individual processes, which lies in a file of its own. The solid arrow represents a bus which we call \texttt{ValueTransfer} in this example.}
+    \label{fig:csptree}
+\end{figure}
+
+As the picture shows, we will need to add two more files. 
+The simulation process generates values, and one defines the sigmoid function.
+We will call them SigmoidSimulation.cs, Busses.cs, and Sigmoid.cs.
+The Program.cs file will be our main file to connect all the processes.
+
+
+
+\subsection{Program.cs}
+Opening up the Program.cs file, we are going to add a couple of lines, as shown in Lst.~\ref{lst:program}.
+First, the namespace in all files should be the same.
+Program. cs contains the project’s primary () method and is the entry point of any C\texthash 
+program. To use the SME library, we import it with the ”using SME” command, as shown
+in the second line.
+Within the Main() method, the first function we meet is the using function; this is just
+to ensure the resources are properly cleaned up after the simulation.
+Hereafter we see the simulation object, which, as the name implies, is responsible for the
+simulation of the logic unit. \\
+
+We define \texttt{simulation data} as a bus since it will pass the value from the simulation generating data to wherever we choose. The same counts for the \texttt{sigmoidresult} because we need to give the results as an output. 
+Then we need a \texttt{simulator}, which we will define shortly as a process, where we insert the simulation data.
+Lastly, we have the \texttt{sigmoid} function, which takes the input data and gives data to the \texttt{sigmoidresult} which then outputs the results.
+We can configure the simulation with the sim object, which uses fluent syntax.
+It should be noted that Run() should always be the last method called. \\
+
+\begin{listing}
+  \inputminted{csharp}{codesnippets/Program.cs}
+  \caption{The Program.cs file, which contains the Main() method for the project }
+  \label{lst:program}
+
+\end{listing}
+
+\subsection{Sigsimulator.cs}
+
+The simulation file is shown in Lst.~\ref{lst:sigsimulator}. Since the \texttt{bus.cs} file only contains two lines; we will put it in the same file as \texttt{sigsimulator.cs} The first definition inside the simulation process creates the bus \texttt{Valuetransfer}, which will, as the word implies, transfer the values we simulate in the Sigsimulator.
+Notice that we define that \texttt{ValueTransfer} in the Sigsimulator to be output as \texttt{m$\_$output} such that we can take the simulated data and transfer it over to the sigmoid function, see figure \ref{lst:sigsimulator}.
+Then we define the Sigsimulator to take in the \texttt{ValueTransfer} as an output value. On lines 19 – 22, we declare our output bus. The way it is written is just pure SME syntax.
+
+We want a new clock cycle to occur, so we use the line await ClockAsync(). In a simulation process, any .NET library is allowed and will not get transpiled to a VHDL file.
+Therefore we can print the output of the AND gate to the console to see whether or not it works
+correctly.
+
+
+\begin{listing}
+  \inputminted{csharp}{codesnippets/SigmoidSimulator.cs}
+  \caption{The SigmoidSimulator.cs file, which generates values from 1 to 10}
+  \label{lst:sigsimulator}
+
+\end{listing}
+
+
+\subsection{Sigmoid function}
+Lastly, we are going to define the sigmoid function itself. We open the file
+Sigmoid.cs. We see how the process is defined in \ref{lst:sigmoidSME}. Since the Sigmoid process is only going to execute once per cycle, we will inherit from the SimpleProcess class. In line 8-11 define a \texttt{m$\_$input} Bus that takes an input in and a \texttt{m$\_$output} Bus that calculates the result. We declare the busses, and 
+then at line 21, we define the actual Sigmoid function and print it out to see the results.
+
+\begin{listing}
+  \inputminted{csharp}{codesnippets/Sigmoid.cs}
+  \caption{The Sigmoid.cs file, which contains the sigmoid function and the bus that will pipe the data}
+  \label{lst:sigmoidSME}
+\end{listing}
+
+Now we go back to the terminal and run the code.
+\begin{lstlisting}
+$ dotnet run
+\end{lstlisting}
+
+This will output a VHDL folder with VHDL files named 'makefile.’ We can use a VHDL simulator to test it out. I use the GHDL simulator to do this.  If you have downloaded GHDL down on your computer, you can navigate to the place where the VHDL folder is and run the following command in your terminal:
+
+\begin{lstlisting}
+$ make
+\end{lstlisting}
+
